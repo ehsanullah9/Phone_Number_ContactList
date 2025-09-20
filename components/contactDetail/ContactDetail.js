@@ -35,10 +35,11 @@ export default function ContactDetail() {
       <div className="flex flex-col gap-2 p-8 sm:flex-row sm:items-center sm:gap-6 sm:py-4 shadow-purple-200 shadow-lg rounded-4xl">
         <div className="space-y-2 text-center sm:text-left">
           <div className="space-y-0.5">
-            <Image
-              src="images/erin-lindford.90b9d461.jpg"
-              width={500}
-              height={500}
+              <Image
+              className="rounded-full"
+              src="/images/erin-lindford.90b9d461.jpg"
+              width={60}
+              height={60}
               alt="Picture of the author"
             />
             
