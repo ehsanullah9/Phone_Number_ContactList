@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import Image from "next/image";
 
 
-export default function ContactDetail() {
+export default function ContactDetail({firstname , lastname ,age ,phone ,_id}) {
   // Define some Tailwind text colors
   const colors = [
     "text-red-500",
@@ -32,7 +32,7 @@ export default function ContactDetail() {
 
   return (
     <>
-      <div className="flex flex-col gap-2 p-8 sm:flex-row sm:items-center sm:gap-6 sm:py-4 shadow-purple-200 shadow-lg rounded-4xl">
+      <div className="flex  gap-2 p-8 sm:flex-row sm:items-center sm:gap-6 sm:py-4 shadow-purple-200 shadow-lg rounded-4xl">
         <div className="space-y-2 text-center sm:text-left">
           <div className="space-y-0.5">
               <Image
@@ -44,9 +44,9 @@ export default function ContactDetail() {
             />
             
             <p className={`text-lg font-semibold ${randomColor}`}>
-              Erin Lindford
+              {firstname}
             </p>
-            <p className="font-medium text-gray-500">0775665432</p>
+            <p className="font-medium text-gray-500">{phone}</p>
           </div>
           <div className="flex justify-center items-center">
             <button className="border-purple-200 border text-purple-600 hover:border-transparent hover:bg-green-400 hover:text-white active:bg-purple-700 px-4 py-2 rounded-full shadow">
