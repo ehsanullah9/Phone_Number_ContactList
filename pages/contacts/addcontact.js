@@ -1,5 +1,4 @@
 import validateContact from "@/validations/validateContact";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { PiSpinnerGapBold } from "react-icons/pi";
@@ -14,8 +13,6 @@ export default function addContact() {
     age: "",
     phone: "",
   });
-  //useRouter
-  const router = useRouter()
   //form handler method to post the data to db
   const FormdataHandler = async (e) => {
     e.preventDefault();
@@ -44,7 +41,6 @@ export default function addContact() {
       age: "",
       phone: "",
     });
-    router.push('/')
 
   };
   

@@ -38,7 +38,7 @@ export default async function handler(req, res) {
   } else if (req.method == "POST") {
     try {
      
-        const contact = await ContactM.create(req.body);
+       await ContactM.create(req.body);
         res.status(201).json("the new contact added to db");
      
     

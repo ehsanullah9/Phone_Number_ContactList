@@ -1,8 +1,17 @@
 import { useMemo } from "react";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import Link from "next/link";
 
-
-export default function ContactDetail({firstname , lastname ,age ,phone ,_id}) {
+export default function ContactDetail({
+  firstname,
+  lastname,
+  age,
+  phone,
+  _id,
+  contacts,
+  setContacts,
+}) {
   // Define some Tailwind text colors
   const colors = [
     "text-red-500",
@@ -30,29 +39,56 @@ export default function ContactDetail({firstname , lastname ,age ,phone ,_id}) {
     return colors[Math.floor(Math.random() * colors.length)];
   }, []);
 
+  //delete handler
+  const DeleteContactHandler = async (_id) => {
+    try {
+      const res = await fetch(`/api/contact/${_id}`, { method: "DELETE" });
+      const data = await res.json();
+      //filter the contacts and setContacts those contacts not contact._id not equal to _id
+      const filteredContact = await contacts.filter(
+        (contact) => contact._id != _id
+      );
+      setContacts(filteredContact);
+
+      if (res.status == 200) {
+        toast.success(data.message);
+      }
+      if (res.status == 404) {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("خطا سمت سرور رخ داد");
+    }
+  };
+
   return (
     <>
-      <div className="flex  gap-2 p-8 sm:flex-row sm:items-center sm:gap-6 sm:py-4 shadow-purple-200 shadow-lg rounded-4xl">
-        <div className="space-y-2 text-center sm:text-left">
+      <div className="flex  gap-2 p-8 sm:flex-row mx-auto sm:gap-6 sm:py-4 shadow-purple-200 shadow-lg rounded-4xl">
+        <div className="space-y-2  sm:text-left">
           <div className="space-y-0.5">
-              <Image
+            <Image
               className="rounded-full"
               src="/images/erin-lindford.90b9d461.jpg"
               width={60}
               height={60}
               alt="Picture of the author"
             />
-            
+
             <p className={`text-lg font-semibold ${randomColor}`}>
               {firstname}
             </p>
             <p className="font-medium text-gray-500">{phone}</p>
           </div>
           <div className="flex justify-center items-center">
+            <Link href={`/contacts/edit/${_id}`}>
             <button className="border-purple-200 border text-purple-600 hover:border-transparent hover:bg-green-400 hover:text-white active:bg-purple-700 px-4 py-2 rounded-full shadow">
               Edit
             </button>
-            <button className="border-purple-200 border mx-6 text-purple-600 hover:border-transparent hover:bg-red-600 hover:text-white active:bg-purple-700 px-4 py-2 rounded-full shadow">
+            </Link>
+            <button
+              onClick={() => DeleteContactHandler(_id)}
+              className="border-purple-200 border mx-6 text-purple-600 hover:border-transparent hover:bg-red-600 hover:text-white active:bg-purple-700 px-4 py-2 rounded-full shadow"
+            >
               Delete
             </button>
             <button className="border-purple-200 border text-purple-600 hover:border-transparent hover:bg-purple-600 hover:text-white active:bg-purple-700 px-4 py-2 rounded-full shadow">
