@@ -19,12 +19,13 @@ export default function Home({ ContactList }) {
       });
     });
   }, []);
-  //the search function
+
+  // the search function
   const searchHandler = async()=>{
   try {
      const res = await fetch(`/api/contact?gen=${searchgen}&&search=${searchkey}`)
     const data = await res.json()
-    setContacts(data.Con)
+    setContacts(data)
   } catch (error) {
     toast.error("خطا سمت سرور رخ داده")
   }

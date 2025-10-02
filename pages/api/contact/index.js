@@ -1,49 +1,39 @@
 import ContactM from "@/models/contact";
 import DBconnection from "@/util/connectDB";
 
-export default async function handler(req, res) {
-  await DBconnection();
-  const { gen, search } = req.query;
-  // check the method
-  if (req.method == "GET") {
-    let Con = null;
-    // check if the gen is exist
-    if (gen && search) {
-      if (gen == "male" || gen == "female") {
-        Con = await ContactM.find({
-          $and: [
-            { gender: gen },
-            { $or: [{ firstname: search }, { lastname: search }] },
-          ],
-        });
+
+export default async function handler(req,res) {
+  DBconnection()
+  const{gen , search}=req.query
+  if(req.method === "GET"){
+    let Contact = null;
+
+    if(gen){
+      if(gen=="male"){
+        Contact = await ContactM.find({gender:gen})
       }
+    else if(gen == "female"){
+      Contact = await ContactM.find({gender:gen})
+    }
+    else{
+      Contact = await ContactM.find({})
+    }
     }
 
-    //check if the gen exist find by gender
-    else if (gen) {
-      if (gen == "male" || gen == "female") {
-        Con = await ContactM.find({ gender: gen });
-      }
+    //the search qs 
+     else if(search){
+      Contact = await ContactM.find({$or:[{firstname:{$regex:search}} , {lastname:{$regex:search}}]})
     }
 
-    //check if the search key exist
-    else if (search) {
-      Con = await ContactM.find({
-        $or: [{ firstname: search }, { lastname: search }],
-      });
-    } else {
-      Con = await ContactM.find();
+    else if(gen && search){
+      if(gen == "male" || gen == "female"){
+        Contact = await ContactM.find({$and:[{gender:gen} , {$or:[{firstname:{$regex:search}} , {lastname:{$regex:search}}]}]})
+      }
+    }else{
+      Contact = await ContactM.find({})
+
     }
-    res.json({ Con });
-  } else if (req.method == "POST") {
-    try {
-     
-       await ContactM.create(req.body);
-        res.status(201).json("the new contact added to db");
-     
-    
-    } catch (error) {
-      res.status(422).json({message:error.message});
-    }
+    res.status(200).json(Contact)
   }
+
 }
