@@ -21,7 +21,9 @@ const contactSchema = new Schema({
   },
   phone: {
     type: String,
-  },
+  },image:{
+    type: String
+  }
 });
 
 const ContactM = models.ContactsModel || model("ContactsModel", contactSchema);
