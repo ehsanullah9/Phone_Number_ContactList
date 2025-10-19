@@ -9,13 +9,13 @@ export default function Home({ ContactList }) {
   const [contacts, setContacts] = useState(ContactList);
   const [searchkey , setSearchkey]= useState('')
   const [searchgen , setSearchgen] = useState('')
-
+  //AOS
   useEffect(() => {
     // Dynamically import AOS to avoid SSR issues
     import("@reimujs/aos").then(({ default: AOS }) => {
       AOS.init({
-        duration: 800, // animation duration
-        once: true, // run only once
+        duration: 800, 
+        once: true, 
       });
     });
   }, []);
@@ -31,6 +31,7 @@ export default function Home({ ContactList }) {
   }
   }
 
+  //search handler
   useEffect(()=>{
     searchHandler()
   },[searchkey,searchgen])
@@ -59,7 +60,7 @@ export default function Home({ ContactList }) {
         </button>
       </div>
 
-      <div className="flex flex-wrap  justify-center lg:justify-start  gap-1 my-4 container mx-auto">
+      <div className="flex justify-center mx-auto gap-4 container">
         {contacts.length > 0 && 
         contacts.map((contact) => (
           <div
@@ -72,9 +73,14 @@ export default function Home({ ContactList }) {
           </div>
         ))
         }
-        {contacts.length == 0 && <div className="mx-auto px-22 py-3 w-120 mt-3 border-l-7 border-red-600 rounded-2xl border ">
-          <h1 className="text-center">there is no audiance</h1>
-          </div>}
+ {contacts.length == 0 && 
+  <div className="flex justify-center">
+    <div className="px-22 py-3 w-120 border-l-7 border-red-600 rounded-2xl border ">
+      <h1 className="text-center">there is no audiance</h1>
+    </div>
+  </div>
+}
+
       </div>
     </>
   );

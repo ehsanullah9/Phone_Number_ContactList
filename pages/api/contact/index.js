@@ -1,39 +1,57 @@
 import ContactM from "@/models/contact";
 import DBconnection from "@/util/connectDB";
 
-
-export default async function handler(req,res) {
-  DBconnection()
-  const{gen , search}=req.query
-  if(req.method === "GET"){
+export default async function handler(req, res) {
+  DBconnection();
+  const { gen, search } = req.query;
+  if (req.method === "GET") {
     let Contact = null;
-
-    if(gen){
-      if(gen=="male"){
-        Contact = await ContactM.find({gender:gen})
+     if (gen && search) {
+      if (gen == "male" || gen == "female") {
+        Contact = await ContactM.find({
+          $and: [
+            { gender: gen },
+            {
+              $or: [
+                { firstname: { $regex: search } },
+                { lastname: { $regex: search } },
+              ],
+            },
+          ],
+        });
       }
-    else if(gen == "female"){
-      Contact = await ContactM.find({gender:gen})
-    }
-    else{
-      Contact = await ContactM.find({})
-    }
-    }
+    } 
 
-    //the search qs 
-     else if(search){
-      Contact = await ContactM.find({$or:[{firstname:{$regex:search}} , {lastname:{$regex:search}}]})
-    }
-
-    else if(gen && search){
-      if(gen == "male" || gen == "female"){
-        Contact = await ContactM.find({$and:[{gender:gen} , {$or:[{firstname:{$regex:search}} , {lastname:{$regex:search}}]}]})
+   else if (gen) {
+      if (gen == "male") {
+        Contact = await ContactM.find({ gender: gen });
+      } else if (gen == "female") {
+        Contact = await ContactM.find({ gender: gen });
+      } else {
+        Contact = await ContactM.find({});
       }
-    }else{
-      Contact = await ContactM.find({})
-
     }
-    res.status(200).json(Contact)
+
+    //the search qs
+    else if (search) {
+      Contact = await ContactM.find({
+        $or: [
+          { firstname: { $regex: search } },
+          { lastname: { $regex: search } },
+        ],
+      });
+    }
+    else {
+      Contact = await ContactM.find({});
+    }
+    res.status(200).json(Contact);
   }
-
+  if(req.method =="POST"){
+    try {
+      await ContactM.create(req.body)
+    res.status(201).json({message:"مخاطب جدید موافقانه اضافه شد"})
+    } catch (error) {
+      res.status(422).json({message:"معلومات ارابه شد قابل پردازش نیست"})
+    }
+  }
 }

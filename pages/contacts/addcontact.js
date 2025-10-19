@@ -1,11 +1,12 @@
 import validateContact from "@/validations/validateContact";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { PiSpinnerGapBold } from "react-icons/pi";
+import "@reimujs/aos/dist/aos.css";
 
 export default function addContact() {
   const [spin, setSpin] = useState(false);
-
+  
   const [formdata, setFormdata] = useState({
     firstname: "",
     lastname: "",
@@ -13,6 +14,17 @@ export default function addContact() {
     age: "",
     phone: "",
   });
+  //AOS
+  useEffect(() => {
+    // Dynamically import AOS to avoid SSR issues
+    import("@reimujs/aos").then(({ default: AOS }) => {
+      AOS.init({
+        duration: 800,
+        once: true,
+      });
+    });
+  }, []);
+
   //form handler method to post the data to db
   const FormdataHandler = async (e) => {
     e.preventDefault();
@@ -25,30 +37,33 @@ export default function addContact() {
       errorMessages.forEach((msg) => toast.error(msg));
       return;
     }
-    setSpin(true)
+    setSpin(true);
     const res = await fetch("/api/contact", {
       method: "POST",
       body: JSON.stringify(formdata),
       headers: { "Content-Type": "application/json" },
     });
     const data = await res.json();
-    setSpin(false)
-    toast.success(data);
-       setFormdata({
+    setSpin(false);
+
+    toast.success(data.message);
+
+    setFormdata({
       firstname: "",
       lastname: "",
       gender: "",
       age: "",
       phone: "",
     });
-
   };
-  
 
   return (
     <>
       <div className="container mx-auto">
-        <div className="mx-auto my-12 p-8 border border-purple-400 rounded-2xl flex flex-col items-center justify-center w-100">
+        <div
+          data-aos="fade-up"
+          className="mx-auto my-12 p-8 border border-purple-400 rounded-2xl flex flex-col items-center justify-center w-100"
+        >
           <h1 className="text-center my-5 text-[32px] ">Add new contact</h1>
 
           <input
