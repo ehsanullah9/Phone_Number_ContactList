@@ -10,6 +10,10 @@ const userSchema = new Schema({
         type:String,
         required:true
     },
+     role:{
+        type:String,
+        enum:['male' , 'female'],
+    },
     email:{
         type:String,
         required:true
