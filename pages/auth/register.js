@@ -5,9 +5,10 @@ import { FaRegEyeSlash } from "react-icons/fa6";
 import validateRegisterform from "@/validations/RgisterFormValidation";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Login() {
-  const router = useRouter()
+  const router = useRouter();
   const [spin, setSpin] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [formdata, setFormdata] = useState({
@@ -24,26 +25,25 @@ export default function Login() {
     e.preventDefault();
 
     const validateData = validateRegisterform(formdata);
-
     if (validateData !== true) {
       const errorMessages = validateData.map((error) => error.message);
       errorMessages.forEach((msg) => toast.error(msg));
       return;
     }
-    setSpin(true)
-    const res = await fetch('/api/auth/register' , {
-      method:"POST",
-      body:JSON.stringify(formdata),
-      headers:{
-        'Content-Type':'application/json'
-      }
+    setSpin(true);
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify(formdata),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
-    const data = await res.json()
-    setSpin(false)
-    toast.success(data.message)
-    router.replace('/auth/login')
-  }
+    const data = await res.json();
+    setSpin(false);
+    toast.success(data.message);
+    router.replace("/auth/login");
+  };
   return (
     <div className="container mx-auto">
       <div
@@ -74,9 +74,7 @@ export default function Login() {
 
         <select
           value={formdata.gender}
-          onChange={(e) =>
-            setFormdata({ ...formdata, gender: e.target.value })
-          }
+          onChange={(e) => setFormdata({ ...formdata, gender: e.target.value })}
           className="border-1 outline-0 w-80 focus:outline-0 my-2 border-purple-400 px-4 py-1 rounded-2xl block"
         >
           <option value="" disabled hidden>
@@ -87,9 +85,7 @@ export default function Login() {
         </select>
 
         <input
-          onChange={(e) =>
-            setFormdata({ ...formdata, email: e.target.value })
-          }
+          onChange={(e) => setFormdata({ ...formdata, email: e.target.value })}
           value={formdata.email}
           type="text"
           placeholder="Email"
@@ -126,6 +122,12 @@ export default function Login() {
             Register
           </button>
         )}
+        <p className="my-4">
+          Has an Account{" "}
+          <Link href="/auth/login">
+            <span className="text-purple-500 underline px-2">Login?</span>
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -26,11 +26,12 @@ export default async function handler(req, res) {
   if (password.length < 8 || password.length > 16){
     return res
       .status(422)
-      .json({ message: "the passowrd must be between 8 and 16 char" });}
+      .json({ message: "the passowrd must be between 8 and 16 char" });
+    }
 
       //hash the pasword
     const IsvalidPass = await bcrypt.compare(password , emailExist.password)
-    if(!IsvalidPass)return res.status(401).json({message:"the password is not valid"})
-
-   
+    if(!IsvalidPass)return res.status(401).json({message: "ایمل یا پسورد درست نیست"})  
+      res.status(200).json({message:"ورد به سابت موافقغیت امیز بود"})
 }
+
