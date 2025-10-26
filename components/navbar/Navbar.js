@@ -3,14 +3,42 @@ import { useRouter } from "next/router";
 import { IoPersonAddOutline } from "react-icons/io5";
 import { LiaListOlSolid } from "react-icons/lia";
 import { MdSpaceDashboard } from "react-icons/md";
-import { CiLogin } from "react-icons/ci";
+import { CiLogin ,CiLogout } from "react-icons/ci";
+import toast from "react-hot-toast";
 
-export default function MyNavabar() {
+export default function MyNavabar({isAuth , setIsAuth}) {
   const { route } = useRouter();
+  
+const LogoutHandler =async()=>{
+  const res = await fetch("/api/auth/logout",{method:"GET"
+    
+  })
+  const data = await res.json()
+  setIsAuth(false)
+  return toast.success(data.message)
+
+}
   return (
     <>
-      <div className="shadow-xl/5 bg-gray-100 p-1 grid grid-cols-1">
+      <div className="shadow-xl/5 bg-pink-100 p-1 w-2xl flex">
         <div className="mx-auto flex p-3">
+          
+{isAuth?
+<Link
+            href="/auth/login"
+            onClick={LogoutHandler}
+            className="flex mx-6 justify-center items-center"
+          >
+            <CiLogout 
+              size={18}
+              className={
+                route == "/auth/login"
+                  ? "text-purple-700"
+                  : "inline align-middle text-gray-950"
+              }
+            />
+            <span className="mx-4">Logout</span>
+          </Link>:
           <Link
             href="/auth/login"
             className="flex mx-6 justify-center items-center"
@@ -23,8 +51,11 @@ export default function MyNavabar() {
                   : "inline align-middle text-gray-950"
               }
             />
-            <span className="mx-4">Login</span>
+            <span className="mx-4">login</span>
           </Link>
+}
+
+          {isAuth &&
           <Link
             href="/contacts/addcontact"
             className="flex mx-6 justify-center items-center"
@@ -39,6 +70,7 @@ export default function MyNavabar() {
             />
             <span className="mx-4">AddContact</span>
           </Link>
+           }
           <Link href="/" className="flex justify-center items-center ">
             <LiaListOlSolid
               size={20}
@@ -46,22 +78,25 @@ export default function MyNavabar() {
             />
             <span className="mx-4"> Contact LIst</span>
           </Link>
+          {isAuth &&
           <Link
-            href="/contacts/addcontact"
+            href="/contacts/dashboard"
             className="flex mx-6 justify-center items-center"
           >
             <MdSpaceDashboard
               size={18}
               className={
-                route == "/contacts/addcontact"
+                route == "/contacts/dashboard"
                   ? "text-purple-700"
                   : "inline align-middle text-gray-950"
               }
             />
             <span className="mx-4">Dashboard</span>
           </Link>
+          }
         </div>
       </div>
     </>
   );
 }
+

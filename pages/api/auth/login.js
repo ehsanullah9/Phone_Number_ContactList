@@ -1,6 +1,8 @@
 import User from "@/models/User";
 import DBconnection from "@/util/connectDB";
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { serialize } from "cookie";
 export default async function handler(req, res) {
   DBconnection()
   const {email, password} = req.body;
@@ -15,12 +17,12 @@ export default async function handler(req, res) {
 
   //Validate the email with RegEx 
   const EmailValidation = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-  if(!EmailValidation.test(email))return res.status(422).json({message:"ایمل ادرس قابل پردازش نیست"})
+  if(!EmailValidation.test(email))return res.status(422).json({message:"ایمل آدرس قابل پردازش نیست"})
 
   //check the duplication
-  const emailExist = await User.findOne({ email });
-  if (!emailExist)
-    return res.status(409).json({ message: "ایمل یا پسورد درست نیست" });
+  const user = await User.findOne({ email });
+  if (!user)
+    return res.status(409).json({ message: "آیمل یا پسورد درست نیست" });
 
   //check the password length
   if (password.length < 8 || password.length > 16){
@@ -30,8 +32,21 @@ export default async function handler(req, res) {
     }
 
       //hash the pasword
-    const IsvalidPass = await bcrypt.compare(password , emailExist.password)
-    if(!IsvalidPass)return res.status(401).json({message: "ایمل یا پسورد درست نیست"})  
+    const IsvalidPass = await bcrypt.compare(password , user.password)
+    if(!IsvalidPass)return res.status(401).json({message: "ایمل یا پسورد درست نیست"})
+
+    //generate the token
+    const token = jwt.sign({email:user.email , role:user.role} , process.env.SECRET_KEY , {expiresIn:"2h"})
+
+
+   //set cookie
+   res.setHeader("set-cookie" , serialize('token' , token , {
+    httpOnly:true,
+    path:"/",
+    sameSite:"strict",
+    maxAge:60*60*2
+   }) )
+
       res.status(200).json({message:"ورد به سابت موافقغیت امیز بود"})
 }
 

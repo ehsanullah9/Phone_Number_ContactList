@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { PiSpinnerGapBold } from "react-icons/pi";
 import "@reimujs/aos/dist/aos.css";
+import ValidatToken from "@/util/auths";
+import { redirect } from "next/dist/server/api-utils";
+import DBconnection from "@/util/connectDB";
 
 export default function addContact() {
   const [spin, setSpin] = useState(false);
@@ -133,4 +136,23 @@ export default function addContact() {
       </div>
     </>
   );
+}
+
+
+export async function  getServerSideProps(context) {
+  
+  const payload = ValidatToken(context)
+
+  if(!payload){
+    return {
+      redirect:{
+        destination:"/auth/login"
+      }
+    }
+  }
+  return{
+    props:{
+
+    }
+  }
 }

@@ -1,4 +1,4 @@
-const { Schema, model, models } = require("mongoose");
+const { Schema, model, models, default: mongoose } = require("mongoose");
 
 const contactSchema = new Schema({
   firstname: {
@@ -23,7 +23,13 @@ const contactSchema = new Schema({
     type: String,
   },image:{
     type: String
-  }
+  },
+ userId: {
+  type: mongoose.Schema.Types.ObjectId, 
+  ref: "User",                       
+  required: true                      
+}
+
 });
 
 const ContactM = models.ContactsModel || model("ContactsModel", contactSchema);

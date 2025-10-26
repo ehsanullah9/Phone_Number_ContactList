@@ -37,9 +37,9 @@ export default function Home({ ContactList }) {
   },[searchkey,searchgen])
 
   return (
-    <>
-      <div
-        className="container mx-auto flex justify-center my-4 "
+    <div className="border-4">
+      <div 
+        className="container border-4 mx-auto flex justify-center my-4 "
         data-aos="fade-down"
         data-aos-easing="linear"
         data-aos-duration="1500"
@@ -60,7 +60,7 @@ export default function Home({ ContactList }) {
         </button>
       </div>
 
-      <div className="flex justify-center mx-auto gap-4 container">
+      <div className="grid mx-auto gap-4 justify-center border-2  ">
         {contacts.length > 0 && 
         contacts.map((contact) => (
           <div
@@ -82,7 +82,7 @@ export default function Home({ ContactList }) {
 }
 
       </div>
-    </>
+    </div>
   );
 }
 
