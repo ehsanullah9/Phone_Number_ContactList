@@ -24,11 +24,10 @@ const contactSchema = new Schema({
   },image:{
     type: String
   },
- userId: {
-  type: mongoose.Schema.Types.ObjectId, 
-  ref: "User",                       
-  required: true                      
-}
+ userId:{
+  type:mongoose.Types.ObjectId,
+  ref:"User"
+ }
 
 });
 

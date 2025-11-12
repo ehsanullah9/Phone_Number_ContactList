@@ -33,7 +33,6 @@ export async function getServerSideProps(context) {
   const user = await User.findOne({ email: tokenPayload.email })
     .select("firstname lastname -_id")
     .lean();
-  console.log(user);
   return {
     props: { user: JSON.parse(JSON.stringify(user)) },
   };

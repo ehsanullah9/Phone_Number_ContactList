@@ -32,7 +32,7 @@ export default function editContact({ contact }) {
     const data = await res.json();
     setSpin(false);
     toast.success(data.message);
-    router.push('/')
+    router.push('/contacts')
   };
 
   return (

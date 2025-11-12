@@ -20,7 +20,7 @@ const LogoutHandler =async()=>{
 }
   return (
     <>
-      <div className="shadow-xl/5 bg-pink-100 p-1 w-2xl flex">
+      <div className="shadow-xl/5 bg-gray-100 p-1 flex">
         <div className="mx-auto flex p-3">
           
 {isAuth?

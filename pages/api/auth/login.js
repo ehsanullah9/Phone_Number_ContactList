@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   if (password.length < 8 || password.length > 16){
     return res
       .status(422)
-      .json({ message: "the passowrd must be between 8 and 16 char" });
+      .json({ message: "ایمل یا پسورد درست نیست" });
     }
 
       //hash the pasword
@@ -36,8 +36,7 @@ export default async function handler(req, res) {
     if(!IsvalidPass)return res.status(401).json({message: "ایمل یا پسورد درست نیست"})
 
     //generate the token
-    const token = jwt.sign({email:user.email , role:user.role} , process.env.SECRET_KEY , {expiresIn:"2h"})
-
+    const token = jwt.sign({email:user.email,userId:user._id , role:user.role} , process.env.SECRET_KEY , {expiresIn:"2h"})
 
    //set cookie
    res.setHeader("set-cookie" , serialize('token' , token , {

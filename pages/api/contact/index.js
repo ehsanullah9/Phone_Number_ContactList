@@ -42,7 +42,7 @@ export default async function handler(req, res) {
       });
     }
     else {
-      Contact = await ContactM.find({});
+      Contact = await ContactM.find({},'-__v').populate('userId' , '-password -role -__v');
     }
     res.status(200).json(Contact);
   }

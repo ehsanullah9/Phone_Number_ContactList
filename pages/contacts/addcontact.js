@@ -1,13 +1,13 @@
 import validateContact from "@/validations/validateContact";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { PiSpinnerGapBold } from "react-icons/pi";
+import { PiSpinnerGapBold, PiStarOfDavidFill } from "react-icons/pi";
 import "@reimujs/aos/dist/aos.css";
 import ValidatToken from "@/util/auths";
 import { redirect } from "next/dist/server/api-utils";
 import DBconnection from "@/util/connectDB";
 
-export default function addContact() {
+export default function addContact({userId}) {
   const [spin, setSpin] = useState(false);
   
   const [formdata, setFormdata] = useState({
@@ -43,7 +43,7 @@ export default function addContact() {
     setSpin(true);
     const res = await fetch("/api/contact", {
       method: "POST",
-      body: JSON.stringify(formdata),
+      body: JSON.stringify({...formdata , userId}),
       headers: { "Content-Type": "application/json" },
     });
     const data = await res.json();
@@ -150,9 +150,11 @@ export async function  getServerSideProps(context) {
       }
     }
   }
+ const userId = payload.userId;
+ console.log(userId)
   return{
     props:{
-
+    userId
     }
   }
 }

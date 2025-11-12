@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PiSpinnerGapBold } from "react-icons/pi";
 import "@reimujs/aos/dist/aos.css";
 import validateLogin from "@/validations/LoginValidation";
@@ -18,39 +18,42 @@ export default function Login({isAuth , setIsAuth}) {
   });
 
   const router = useRouter()
+
   const LoginFormHandler = async (e) => {
     e.preventDefault();
     const validate = validateLogin(loginData);
-
+    setSpin(true)
     if (validate !== true) {
       const errorMsg = validate.map((err) => err.message);
       errorMsg.forEach((msg) => {
-        toast.error(msg);
+       return toast.error(msg);
       });
-      
+      setSpin(false)
+
     }
 
     const res = await fetch("/api/auth/login", {
       method: "POST",
       body: JSON.stringify(loginData),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: {"Content-Type": "application/json",},
     });
     const data = await res.json();
-    if (res.status == 422 || res.status == 500 || res.status == 409)
+    if (res.status == 422 || res.status == 500 || res.status == 409){
+      setSpin(false)
       return toast.error(data.message);
-    setSpin(true)
+    }
     toast.success(data.message);
-    router.replace('/contacts/dashboard')
+    router.replace('../contacts/dashboard')
     setIsAuth(true)
-    
   };
 
   const showhide = () => setShowPass(!showPass);
 
+  const emailRef = useRef(null)
+
   //AOS
   useEffect(() => {
+    emailRef.current.focus()
     // Dynamically import AOS to avoid SSR issues
     import("@reimujs/aos").then(({ default: AOS }) => {
       AOS.init({
@@ -59,6 +62,7 @@ export default function Login({isAuth , setIsAuth}) {
       });
     });
   }, []);
+ 
 
   return (
     <>
@@ -71,6 +75,7 @@ export default function Login({isAuth , setIsAuth}) {
             <h1 className="text-center my-5 text-[32px] ">Login Form</h1>
 
             <input
+            ref={emailRef}
               value={loginData.email}
               onChange={(e) =>
                 setLoginData({ ...loginData, email: e.target.value })

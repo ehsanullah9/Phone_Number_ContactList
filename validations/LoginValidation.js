@@ -8,6 +8,7 @@ const LoginValidationSchema = {
     pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     messages: {
       stringPattern: "ایمل یا پسورد اشتباه است",
+      stringMin:"پسورد  یا ایمل اشتباه است"
     },
   },
   password: {
